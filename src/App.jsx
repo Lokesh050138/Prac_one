@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       {/* <Adding_number /> */}
-      {/* <Speech_to_text /> */}
+      {<Speech_to_text />}
       <Speech_to_text2 />
     </>
   )
