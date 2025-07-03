@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 function Speech_to_text2() {
+    const [language, setLanguage] = useState('en-IN');
 
-    const startListening = () => SpeechRecognition.startListening({ continuous: true, language: 'en-US' })
-    const stopListening = () => SpeechRecognition.stopListening()
+    const startListening = () => SpeechRecognition.startListening({ continuous: true, language });
+    const stopListening = () => SpeechRecognition.stopListening();
 
     const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
@@ -21,6 +22,21 @@ function Speech_to_text2() {
                 <p className="text-center text-gray-300 mb-6">
                     Speak into your microphone and watch your words turn into text.
                 </p>
+
+                {/* Language Dropdown */}
+                <div className="flex justify-center mb-6">
+                    <select
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="px-4 py-2 rounded bg-black/30 text-cyan-200 border border-cyan-400 focus:outline-none"
+                    >
+                        <option value="en-IN">English (India)</option>
+                        <option value="en-US">English (US)</option>
+                        <option value="hi-IN">Hindi (हिन्दी)</option>
+                        <option value="ja-JP">Japanese (日本語)</option>
+                        <option value="ko-KR">Korean (한국어)</option>
+                    </select>
+                </div>
 
                 <div className="bg-black/40 rounded-lg p-4 h-48 overflow-y-auto text-lg text-cyan-200 border border-cyan-500 mb-6 shadow-inner">
                     {transcript || <span className="text-gray-500">Your speech will appear here...</span>}
