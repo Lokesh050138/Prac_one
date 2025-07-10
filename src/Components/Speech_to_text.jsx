@@ -9,10 +9,10 @@ import sunImg from '../assets/sun.png';
 import moonImg from '../assets/moon.png';
 
 function Speech_to_text() {
-    const location = useLocation();
     const [language, setLanguage] = useState('en-IN');
     const [notification, setNotification] = useState('');
     const [theme, setTheme] = useState('dark');
+    const location = useLocation();
 
 
     const startListening = () => {
@@ -41,9 +41,14 @@ function Speech_to_text() {
     };
 
     const handleCopy = () => {
+    try {
         navigator.clipboard.writeText(transcript);
         showNotification("✅ Copied to clipboard!");
-    };
+    } catch (err) {
+        showNotification("❌ Failed to copy");
+    }
+};
+
 
     const handleReset = () => {
         resetTranscript();
