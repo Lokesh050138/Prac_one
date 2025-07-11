@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <Speech_to_text />
-      <TextToSpeech />
+      {/* <TextToSpeech /> */}
     </div>
   )
 }
