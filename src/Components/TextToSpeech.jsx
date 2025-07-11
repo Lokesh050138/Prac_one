@@ -13,9 +13,6 @@ const TextToSpeech = () => {
   const [theme, setTheme] = useState('dark');
   const [notification, setNotification] = useState('');
   const utteranceRef = useRef(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
 
   useEffect(() => {
     const loadVoices = () => {
@@ -74,47 +71,6 @@ const TextToSpeech = () => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-  const downloadSpeech = async () => {
-    if (!text.trim()) {
-      showNotification('❗ Please write some text first');
-      return;
-    }
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    audioChunksRef.current = [];
-
-    mediaRecorder.ondataavailable = (e) => {
-      audioChunksRef.current.push(e.data);
-    };
-
-    mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-      const url = URL.createObjectURL(audioBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'tts_output.wav';
-      link.click();
-      URL.revokeObjectURL(url);
-      showNotification('✅ Voice downloaded!');
-    };
-
-    mediaRecorder.start();
-    setIsRecording(true);
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = selectedVoice;
-    utterance.rate = rate;
-
-    utterance.onend = () => {
-      mediaRecorder.stop();
-      stream.getTracks().forEach((track) => track.stop());
-      setIsRecording(false);
-    };
-
-    window.speechSynthesis.speak(utterance);
-  };
 
   return (
     <div className={`min-h-screen font-sans font-semibold leading-loose flex items-center justify-center px-4 py-10 transition-all duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white' : 'bg-gradient-to-br from-gray-500 via-white to-gray-600 text-gray-900'}`}>
@@ -235,13 +191,6 @@ const TextToSpeech = () => {
             ♻️ Reset
           </button>
 
-          <button
-            onClick={downloadSpeech}
-            disabled={isRecording}
-            className="text-white bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
-          >
-            🎧 Download Voice
-          </button>
         </div>
       </div>
     </div>
