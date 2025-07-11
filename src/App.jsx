@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Navigate to="/text-to-speech" />} /> */}
+        <Route path="/" element={<Navigate to="/text-to-speech" />} />
 
         <Route path="/text-to-speech" element={<TextToSpeech />} />
         <Route path="/speech-to-text" element={<Speech_to_text />} />
