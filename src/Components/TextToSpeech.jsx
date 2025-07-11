@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import sunImg from '../assets/sun.png';
 import moonImg from '../assets/moon.png';
-import { Link, useLocation } from 'react-router-dom';
-
 
 const TextToSpeech = () => {
-  const location = useLocation();
   const [voices, setVoices] = useState([]);
   const [text, setText] = useState('');
   const [selectedVoice, setSelectedVoice] = useState(null);
@@ -13,6 +10,7 @@ const TextToSpeech = () => {
   const [theme, setTheme] = useState('dark');
   const [notification, setNotification] = useState('');
   const utteranceRef = useRef(null);
+ 
 
   useEffect(() => {
     const loadVoices = () => {
@@ -71,11 +69,12 @@ const TextToSpeech = () => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
+  
 
   return (
     <div className={`min-h-screen font-sans font-semibold leading-loose flex items-center justify-center px-4 py-10 transition-all duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white' : 'bg-gradient-to-br from-gray-500 via-white to-gray-600 text-gray-900'}`}>
       {/* Theme toggle */}
-      <button
+      {/* <button
         onClick={toggleTheme}
         className="absolute top-4 right-4 focus:outline-none transition-transform duration-700 hover:scale-110"
         title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
@@ -85,34 +84,9 @@ const TextToSpeech = () => {
           alt="Theme Icon"
           className={`rounded-lg p-1 w-10 h-10 transition-all duration-700 ease-in-out ${theme === 'dark' ? 'bg-slate-600 shadow-lg shadow-gray-600' : 'shadow-lg shadow-gray-600'}`}
         />
-      </button>
+      </button> */}
 
       <div className={`w-full max-w-3xl ${theme === 'dark' ? 'bg-white/5 border-gray-700 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} backdrop-blur-md rounded-2xl shadow-lg p-8 border`}>
-
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex rounded-full bg-gray-300 dark:bg-gray-700 p-1">
-            <Link
-              to="/text-to-speech"
-              className={`px-2 py-1 rounded-full transition-all duration-300 ${location.pathname === '/text-to-speech'
-                ? 'bg-white dark:bg-black text-white font-bold shadow'
-                : 'text-gray-600 dark:text-gray-300 hover:text-blue-500'
-                }`}
-            >
-              Text to Speech
-            </Link>
-            <Link
-              to="/speech-to-text"
-              className={`px-2 py-1 rounded-full transition-all duration-300 ${location.pathname === '/speech-to-text'
-                ? 'bg-white dark:bg-black text-white font-bold shadow'
-                : 'text-gray-600 dark:text-gray-300 hover:text-blue-500'
-                }`}
-            >
-              Speech to Text
-            </Link>
-          </div>
-        </div>
-
-
         <h1 className="text-3xl md:text-4xl font-extrabold text-center tracking-wider mb-4 text-cyan-400">
           Text to <span className={`rounded-lg p-2 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white' : 'bg-gradient-to-br from-gray-400 via-white to-gray-400 text-gray-900'}`}>Speech</span>
         </h1>
@@ -191,6 +165,7 @@ const TextToSpeech = () => {
             ♻️ Reset
           </button>
 
+          
         </div>
       </div>
     </div>
