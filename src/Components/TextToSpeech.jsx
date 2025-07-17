@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import sunImg from '../assets/sun.png';
-import moonImg from '../assets/moon.png';
 
 const TextToSpeech = () => {
   const [voices, setVoices] = useState([]);
   const [text, setText] = useState('');
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [rate, setRate] = useState(1);
-  const [theme, setTheme] = useState('dark');
   const [notification, setNotification] = useState('');
   const utteranceRef = useRef(null);
- 
 
   useEffect(() => {
     const loadVoices = () => {
@@ -60,44 +56,22 @@ const TextToSpeech = () => {
     showNotification('♻️ Text cleared');
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  };
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-  }, [theme]);
-
-  
-
   return (
-    <div className={`min-h-screen font-sans font-semibold leading-loose flex items-center justify-center px-4 py-10 transition-all duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white' : 'bg-gradient-to-br from-gray-500 via-white to-gray-600 text-gray-900'}`}>
-      {/* Theme toggle */}
-      {/* <button
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 focus:outline-none transition-transform duration-700 hover:scale-110"
-        title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-      >
-        <img
-          src={theme === 'dark' ? moonImg : sunImg}
-          alt="Theme Icon"
-          className={`rounded-lg p-1 w-10 h-10 transition-all duration-700 ease-in-out ${theme === 'dark' ? 'bg-slate-600 shadow-lg shadow-gray-600' : 'shadow-lg shadow-gray-600'}`}
-        />
-      </button> */}
-
-      <div className={`w-full max-w-3xl ${theme === 'dark' ? 'bg-white/5 border-gray-700 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'} backdrop-blur-md rounded-2xl shadow-lg p-8 border`}>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-center tracking-wider mb-4 text-cyan-400">
-          Text to <span className={`rounded-lg p-2 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white' : 'bg-gradient-to-br from-gray-400 via-white to-gray-400 text-gray-900'}`}>Speech</span>
+    <div className="font-sans flex items-center justify-center transition-all duration-300">
+      <div className="w-full max-w-3xl bg-white dark:bg-white/5 backdrop-blur-md rounded-2xl shadow-lg p-8 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-center tracking-wider mb-4 dark:border-gray-700">
+          Text to <span className="bg-gradient-to-br from-blue-200 to-blue-500 text-white rounded px-2 py-1 dark:from-gray-900 dark:to-black">Speech</span>
         </h1>
-        <p className="text-center mb-6">
+
+        <p className="text-center text-gray-700 dark:text-gray-300 mb-6">
           Type something and hear it spoken aloud.
         </p>
+        
 
         {/* Text Area */}
         <textarea
           rows="4"
-          className={`w-full p-4 rounded-lg text-lg border mb-6 shadow-inner ${theme === 'dark' ? 'bg-black/40 text-cyan-200 border-cyan-500' : 'bg-white text-gray-800 border-gray-300'}`}
+          className="w-full bg-gray-100 dark:bg-black/40 rounded-lg p-4 h-48 overflow-y-auto text-lg text-gray-800 dark:text-cyan-200 border border-gray-300 dark:border-cyan-500 mb-6 shadow-inner"
           placeholder="Type something to speak..."
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -107,14 +81,14 @@ const TextToSpeech = () => {
         <div className="mb-6">
           <label className="block font-medium mb-2">Choose Voice:</label>
           <select
-            className={`w-full px-4 py-2 rounded border focus:outline-none ${theme === 'dark' ? 'bg-black/30 text-cyan-200 border-cyan-400' : 'bg-white text-gray-800 border-gray-400'}`}
+            className="w-full px-4 py-2 rounded border bg-white dark:bg-black/30 text-gray-800 dark:text-cyan-200 border-gray-400 dark:border-cyan-400"
             onChange={(e) =>
               setSelectedVoice(voices.find(v => v.name === e.target.value))
             }
             value={selectedVoice?.name || ''}
           >
             {voices.map((voice, i) => (
-              <option key={i} value={voice.name} className={theme === 'dark' ? 'bg-gray-900 text-cyan-200' : 'bg-white text-gray-800'}>
+              <option className='bg-white dark:bg-gray-900 text-gray-800 dark:text-cyan-200' key={i} value={voice.name}>
                 {voice.name} ({voice.lang})
               </option>
             ))}
@@ -123,7 +97,9 @@ const TextToSpeech = () => {
 
         {/* Speed Control */}
         <div className="mb-6">
-          <label className="block font-medium mb-2">Voice Speed: {rate.toFixed(1)}x</label>
+          <label className="block font-medium mb-2">
+            Voice Speed: {rate.toFixed(1)}x
+          </label>
           <input
             type="range"
             min="0.5"
@@ -138,34 +114,32 @@ const TextToSpeech = () => {
         {/* Notification */}
         <div className="h-6 text-center mb-4">
           {notification && (
-            <span className="text-green-400 text-sm animate-pulse">{notification}</span>
+            <span className="text-green-500 dark:text-green-400 text-sm animate-pulse">{notification}</span>
           )}
         </div>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={speak}
-            className="text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
+            className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg text-sm px-5 py-2.5"
           >
             🔊 Speak
           </button>
 
           <button
             onClick={stopSpeaking}
-            className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
+            className="text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 shadow-lg rounded-lg text-sm px-5 py-2.5"
           >
             🛑 Stop
           </button>
 
           <button
             onClick={resetText}
-            className="text-white bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-orange-300 dark:focus:ring-orange-800 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
+            className="text-white bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 shadow-lg rounded-lg text-sm px-5 py-2.5"
           >
             ♻️ Reset
           </button>
-
-          
         </div>
       </div>
     </div>
