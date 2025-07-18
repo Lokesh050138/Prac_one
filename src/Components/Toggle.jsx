@@ -42,7 +42,7 @@ function Toggle() {
           <img
             src={theme === "dark" ? sunIcon : moonIcon}
             alt="Toggle Theme"
-            className="w-8 h-8 rounded-full shadow"
+            className="w-10 h-10 p-1 rounded-lg shadow-sm shadow-gray-500"
           />
         </button>
       </header>
