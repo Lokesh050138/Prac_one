@@ -2,13 +2,9 @@ import React, { useState } from 'react'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import { FaMicrophone, FaStop, FaRegCopy, FaRedo } from 'react-icons/fa';
 
-
 function Speech_to_text() {
   const [language, setLanguage] = useState('en-IN');
-  const [copied, setCopied] = useState(false);
-
-  const startListening = () => SpeechRecognition.startListening({ continuous: true, language });
-  const stopListening = () => SpeechRecognition.stopListening();
+  const [notification, setNotification] = useState('');  // single notification state
 
   const {
     transcript,
@@ -20,11 +16,37 @@ function Speech_to_text() {
     return <p className="text-center text-red-500">Browser doesn't support speech recognition.</p>
   }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(transcript);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const startListening = () => {
+    SpeechRecognition.startListening({ continuous: true, language });
+    setNotification('🎤 Started listening...');
+    clearNotificationAfterDelay();
   };
+
+  const stopListening = () => {
+    SpeechRecognition.stopListening();
+    setNotification('🛑 Stopped listening');
+    clearNotificationAfterDelay();
+  };
+
+  const handleCopy = () => {
+    if (!transcript.trim()) {
+      setNotification('❗ Nothing to copy!');
+    } else {
+      navigator.clipboard.writeText(transcript);
+      setNotification('✅ Copied to clipboard!');
+    }
+    clearNotificationAfterDelay();
+  };
+
+  const handleReset = () => {
+    resetTranscript();
+    setNotification('♻️ Transcript reset');
+    clearNotificationAfterDelay();
+  };
+
+  function clearNotificationAfterDelay() {
+    setTimeout(() => setNotification(''), 2000);
+  }
 
   return (
     <div className="font-sans flex items-center justify-center">
@@ -58,8 +80,8 @@ function Speech_to_text() {
 
         {/* Notification */}
         <div className="h-6 text-center mb-4">
-          {copied && (
-            <span className="text-green-500 dark:text-green-400 text-sm animate-pulse">✅ Copied to clipboard!</span>
+          {notification && (
+            <span className="text-green-500 dark:text-green-400 text-sm animate-pulse">{notification}</span>
           )}
         </div>
 
@@ -68,26 +90,30 @@ function Speech_to_text() {
           <button
             onClick={handleCopy}
             className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700"
-          > <FaRegCopy className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
-          Copy
+          >
+            <FaRegCopy className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
+            Copy
           </button>
           <button
-            onClick={resetTranscript}
+            onClick={handleReset}
             className="text-white bg-orange-700 hover:bg-orange-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-orange-600 dark:hover:bg-orange-700"
-          > <FaRedo className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
-          Reset
+          >
+            <FaRedo className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
+            Reset
           </button>
           <button
             onClick={startListening}
             className="text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700"
-          > <FaMicrophone className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
-          Start Listening
+          >
+            <FaMicrophone className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
+            Start Listening
           </button>
           <button
             onClick={stopListening}
             className="text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700"
-          > <FaStop className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
-          Stop Listening
+          >
+            <FaStop className="inline-flex items-center justify-between mr-2 mb-1 text-[18px]" />
+            Stop Listening
           </button>
         </div>
       </div>
