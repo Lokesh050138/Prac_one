@@ -4,17 +4,8 @@ import { FaMicrophone, FaStop, FaRegCopy, FaRedo } from 'react-icons/fa';
 
 function Speech_to_text() {
   const [language, setLanguage] = useState('en-IN');
-  const [notification, setNotification] = useState('');  // single notification state
-
-  const {
-    transcript,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
-
-  if (!browserSupportsSpeechRecognition) {
-    return <p className="text-center text-red-500">Browser doesn't support speech recognition.</p>
-  }
+  const [copied, setCopied] = useState(false);
+  const [notification, setNotification] = useState('');  // new notification state
 
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language });
@@ -28,12 +19,24 @@ function Speech_to_text() {
     clearNotificationAfterDelay();
   };
 
+  const {
+    transcript,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <p className="text-center text-red-500">Browser doesn't support speech recognition.</p>
+  }
+
   const handleCopy = () => {
     if (!transcript.trim()) {
       setNotification('❗ Nothing to copy!');
     } else {
       navigator.clipboard.writeText(transcript);
+      setCopied(true);
       setNotification('✅ Copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
     }
     clearNotificationAfterDelay();
   };
@@ -44,6 +47,7 @@ function Speech_to_text() {
     clearNotificationAfterDelay();
   };
 
+  // helper to clear notification after 2 seconds
   function clearNotificationAfterDelay() {
     setTimeout(() => setNotification(''), 2000);
   }
